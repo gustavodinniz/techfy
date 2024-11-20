@@ -1,6 +1,7 @@
 package br.techfy.ecom.controller;
 
 import br.techfy.ecom.dto.request.CreateCategoryRequest;
+import br.techfy.ecom.dto.response.GetCategoryByIdResponse;
 import br.techfy.ecom.service.CategoryService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +29,11 @@ public class CategoryController {
                 .buildAndExpand(uuid)
                 .toUri();
         response.addHeader("location", location.toString());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public GetCategoryByIdResponse getCategoryById(@PathVariable UUID id) {
+        return categoryService.getCategoryById(id);
     }
 }
