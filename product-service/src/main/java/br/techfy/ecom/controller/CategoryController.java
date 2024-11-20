@@ -2,6 +2,7 @@ package br.techfy.ecom.controller;
 
 import br.techfy.ecom.dto.request.CreateCategoryRequest;
 import br.techfy.ecom.dto.request.UpdateCategoryRequest;
+import br.techfy.ecom.dto.response.GetCategoriesResponse;
 import br.techfy.ecom.dto.response.GetCategoryByIdResponse;
 import br.techfy.ecom.service.CategoryService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,5 +50,11 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateCategory(@PathVariable UUID id, @RequestBody UpdateCategoryRequest updateCategoryRequest) {
         categoryService.updateCategory(id, updateCategoryRequest);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetCategoriesResponse> getCategories(@RequestParam(value = "name", required = false) String name) {
+        return categoryService.getCategories(name);
     }
 }
