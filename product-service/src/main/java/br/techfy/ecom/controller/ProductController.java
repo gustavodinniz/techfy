@@ -36,4 +36,10 @@ public class ProductController {
     public GetProductByIdResponse getProductById(@PathVariable UUID id) {
         return productService.getProductById(id);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable UUID id) {
+        productService.deleteProduct(id);
+    }
 }

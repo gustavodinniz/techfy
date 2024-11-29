@@ -44,4 +44,10 @@ public class ProductService {
                     return new ProductNotFoundException("404.002");
                 });
     }
+
+    public void deleteProduct(UUID id) {
+        log.info("Starting operation to delete product by ID: {}", id);
+        productRepository.deleteById(id);
+        log.info("Product deleted for ID: {}", id);
+    }
 }
