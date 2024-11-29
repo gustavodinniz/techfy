@@ -1,6 +1,7 @@
 package br.techfy.ecom.controller;
 
 import br.techfy.ecom.dto.request.CreateProductRequest;
+import br.techfy.ecom.dto.response.GetProductByIdResponse;
 import br.techfy.ecom.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +29,11 @@ public class ProductController {
                 .buildAndExpand(uuid)
                 .toUri();
         response.addHeader("Location", location.toString());
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public GetProductByIdResponse getProductById(@PathVariable UUID id) {
+        return productService.getProductById(id);
     }
 }
