@@ -34,15 +34,9 @@ public class CategoryService {
 
     public GetCategoryByIdResponse getCategoryById(UUID id) {
         log.info("Starting operation to get category by ID: {}", id);
-        return categoryRepository.findById(id)
-                .map(category -> {
-                    log.info("Category found for ID: {}", id);
-                    return GetCategoryByIdResponse.valueOf(category);
-                })
-                .orElseThrow(() -> {
-                    log.warn("No category found for ID: {}", id);
-                    return new CategoryNotFoundException("404.001");
-                });
+        var category = findCategoryById(id);
+        log.info("Category found for ID: {}", id);
+        return GetCategoryByIdResponse.valueOf(category);
     }
 
     public void deleteCategory(UUID id) {
@@ -53,16 +47,19 @@ public class CategoryService {
 
     public void updateCategory(UUID id, UpdateCategoryRequest updateCategoryRequest) {
         log.info("Starting operation to update category by ID: {}", id);
-        categoryRepository.findById(id)
-                .ifPresentOrElse(category -> {
-                    log.info("Category found for ID: {}", id);
-                    category.setName(Optional.ofNullable(updateCategoryRequest.name()).orElse(category.getName()));
-                    category.setDescription(Optional.ofNullable(updateCategoryRequest.description()).orElse(category.getDescription()));
-                    categoryRepository.save(category);
-                    log.info("Category updated for ID: {}", id);
-                }, () -> {
+        var category = findCategoryById(id);
+        category.setName(Optional.ofNullable(updateCategoryRequest.name()).orElse(category.getName()));
+        category.setDescription(Optional.ofNullable(updateCategoryRequest.description()).orElse(category.getDescription()));
+        categoryRepository.save(category);
+        log.info("Category updated for ID: {}", id);
+    }
+
+    private Category findCategoryById(UUID id) {
+        log.info("Find category by ID: {}", id);
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> {
                     log.warn("No category found for ID: {}", id);
-                    throw new CategoryNotFoundException("404.001");
+                    return new CategoryNotFoundException("404.001");
                 });
     }
 
