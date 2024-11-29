@@ -3,6 +3,7 @@ package br.techfy.ecom.controller;
 import br.techfy.ecom.dto.request.CreateProductRequest;
 import br.techfy.ecom.dto.request.UpdateProductRequest;
 import br.techfy.ecom.dto.response.GetProductByIdResponse;
+import br.techfy.ecom.dto.response.GetProductsResponse;
 import br.techfy.ecom.dto.response.UpdateProductResponse;
 import br.techfy.ecom.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,6 +51,15 @@ public class ProductController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UpdateProductResponse updateProduct(@PathVariable UUID id, @RequestBody UpdateProductRequest updateProductRequest) {
-       return productService.updateProduct(id, updateProductRequest);
+        return productService.updateProduct(id, updateProductRequest);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetProductsResponse> getProductsByFilters(@RequestParam(value = "name", required = false) String name,
+                                                          @RequestParam(value = "category", required = false) String category,
+                                                          @RequestParam(value = "min_price", required = false) BigDecimal minPrice,
+                                                          @RequestParam(value = "max_price", required = false) BigDecimal maxPrice) {
+        return productService.getProductsByFilters(name, category, minPrice, maxPrice);
     }
 }

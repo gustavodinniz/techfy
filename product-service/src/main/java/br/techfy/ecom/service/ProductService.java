@@ -3,16 +3,21 @@ package br.techfy.ecom.service;
 import br.techfy.ecom.dto.request.CreateProductRequest;
 import br.techfy.ecom.dto.request.UpdateProductRequest;
 import br.techfy.ecom.dto.response.GetProductByIdResponse;
+import br.techfy.ecom.dto.response.GetProductsResponse;
 import br.techfy.ecom.dto.response.UpdateProductResponse;
 import br.techfy.ecom.exception.CategoryNotFoundException;
 import br.techfy.ecom.exception.ProductNotFoundException;
 import br.techfy.ecom.model.Category;
 import br.techfy.ecom.model.Product;
 import br.techfy.ecom.repository.ProductRepository;
+import br.techfy.ecom.repository.specification.ProductSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -82,5 +87,18 @@ public class ProductService {
             log.warn("Category not found for ID: {}", updateProductRequest.categoryId());
             return null;
         }
+    }
+
+    public List<GetProductsResponse> getProductsByFilters(String name, String category,
+                                                          BigDecimal minPrice, BigDecimal maxPrice) {
+        log.info("Starting operation to get products by filters");
+        Specification<Product> specification = Specification.where(ProductSpecification.hasName(name))
+                .and(ProductSpecification.hasCategory(category))
+                .and(ProductSpecification.hasPriceBetween(minPrice, maxPrice));
+        var products = productRepository.findAll(specification);
+        log.info("Products found by filters: {}", products.size());
+        return products.stream()
+                .map(GetProductsResponse::valueOf)
+                .toList();
     }
 }
