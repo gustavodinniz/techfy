@@ -24,12 +24,12 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public UUID createCategory(CreateCategoryRequest createCategoryRequest) {
+    public String createCategory(CreateCategoryRequest createCategoryRequest) {
         log.info("Starting operation to create category: {}", createCategoryRequest.name());
         var category = createCategoryRequest.toCategory();
         categoryRepository.save(category);
         log.info("Category created with ID: {}", category.getId());
-        return category.getId();
+        return category.getId().toString();
     }
 
     public GetCategoryByIdResponse getCategoryById(UUID id) {
@@ -54,7 +54,7 @@ public class CategoryService {
         log.info("Category updated for ID: {}", id);
     }
 
-    private Category findCategoryById(UUID id) {
+    public Category findCategoryById(UUID id) {
         log.info("Find category by ID: {}", id);
         return categoryRepository.findById(id)
                 .orElseThrow(() -> {
