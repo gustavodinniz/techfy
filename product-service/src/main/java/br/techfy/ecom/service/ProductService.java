@@ -1,14 +1,19 @@
 package br.techfy.ecom.service;
 
 import br.techfy.ecom.dto.request.CreateProductRequest;
+import br.techfy.ecom.dto.request.UpdateProductRequest;
 import br.techfy.ecom.dto.response.GetProductByIdResponse;
+import br.techfy.ecom.dto.response.UpdateProductResponse;
+import br.techfy.ecom.exception.CategoryNotFoundException;
 import br.techfy.ecom.exception.ProductNotFoundException;
+import br.techfy.ecom.model.Category;
 import br.techfy.ecom.model.Product;
 import br.techfy.ecom.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -49,5 +54,33 @@ public class ProductService {
         log.info("Starting operation to delete product by ID: {}", id);
         productRepository.deleteById(id);
         log.info("Product deleted for ID: {}", id);
+    }
+
+    public UpdateProductResponse updateProduct(UUID id, UpdateProductRequest updateProductRequest) {
+        log.info("Starting operation to update product by ID: {}", id);
+        var category = verifyCategory(updateProductRequest);
+        var product = findProductById(id);
+        product.setName(Optional.ofNullable(updateProductRequest.name()).orElse(product.getName()));
+        product.setDescription(Optional.ofNullable(updateProductRequest.description()).orElse(product.getDescription()));
+        product.setPrice(Optional.ofNullable(updateProductRequest.price()).orElse(product.getPrice()));
+        product.setStockQuantity(Optional.ofNullable(updateProductRequest.stockQuantity()).orElse(product.getStockQuantity()));
+        product.setSku(Optional.ofNullable(updateProductRequest.sku()).orElse(product.getSku()));
+        product.setCategory(Optional.ofNullable(category).orElse(product.getCategory()));
+        productRepository.save(product);
+        log.info("Product updated for ID: {}", id);
+        return UpdateProductResponse.valueOf(product);
+    }
+
+    private Category verifyCategory(UpdateProductRequest updateProductRequest) {
+        if (updateProductRequest.categoryId() == null) {
+            return null;
+        }
+
+        try {
+            return categoryService.findCategoryById(updateProductRequest.categoryId());
+        } catch (CategoryNotFoundException e) {
+            log.warn("Category not found for ID: {}", updateProductRequest.categoryId());
+            return null;
+        }
     }
 }

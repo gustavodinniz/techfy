@@ -1,7 +1,9 @@
 package br.techfy.ecom.controller;
 
 import br.techfy.ecom.dto.request.CreateProductRequest;
+import br.techfy.ecom.dto.request.UpdateProductRequest;
 import br.techfy.ecom.dto.response.GetProductByIdResponse;
+import br.techfy.ecom.dto.response.UpdateProductResponse;
 import br.techfy.ecom.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -41,5 +43,11 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UpdateProductResponse updateProduct(@PathVariable UUID id, @RequestBody UpdateProductRequest updateProductRequest) {
+       return productService.updateProduct(id, updateProductRequest);
     }
 }
