@@ -11,7 +11,7 @@ public class ProductSpecification {
     private static final String CATEGORY = "category";
     private static final String PRICE = "price";
 
-    private ProductSpecification() {
+    ProductSpecification() {
         throw new IllegalStateException("Utility class");
     }
 
