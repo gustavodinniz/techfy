@@ -27,7 +27,7 @@ public class CategoryService {
     public String createCategory(CreateCategoryRequest createCategoryRequest) {
         log.info("Starting operation to create category: {}", createCategoryRequest.name());
         var category = createCategoryRequest.toCategory();
-        categoryRepository.save(category);
+        category = categoryRepository.save(category);
         log.info("Category created with ID: {}", category.getId());
         return category.getId().toString();
     }

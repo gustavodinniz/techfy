@@ -1,4 +1,4 @@
-package br.techfy.ecom.config;
+package br.techfy.ecom.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;

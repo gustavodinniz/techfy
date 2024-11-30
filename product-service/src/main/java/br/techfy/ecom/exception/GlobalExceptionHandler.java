@@ -1,6 +1,6 @@
 package br.techfy.ecom.exception;
 
-import br.techfy.ecom.config.MessageConfig;
+import br.techfy.ecom.configuration.MessageConfig;
 
 import br.techfy.ecom.dto.FieldErrorDTO;
 import br.techfy.ecom.dto.response.ErrorResponse;
