@@ -45,6 +45,12 @@ public class GlobalExceptionHandler {
         return ErrorResponse.defaultResponse(e.getMessage(), messageConfig.getMessage(e.getMessage()));
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ErrorResponse handleNotFoundException(ProductNotFoundException e) {
+        return ErrorResponse.defaultResponse(e.getMessage(), messageConfig.getMessage(e.getMessage()));
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ErrorResponse handleNotFoundException(MethodArgumentTypeMismatchException e) {
